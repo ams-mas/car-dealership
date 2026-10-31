@@ -38,3 +38,5 @@ Verified: Apache syntax check; MySQL migrations; starter tests (2 passed); HTTP 
 8. Open http://localhost:8080.
 
 Do not upload `.env` or database files. Production deployment requires its own environment configuration and credentials.
+
+Compiled frontend assets in dealership/public/build are included in GitHub. Rebuild them after changing frontend source. Composer and npm dependencies are restored using the committed lockfiles; local environment files, databases, caches, and logs are not uploaded.
