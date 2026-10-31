@@ -1,0 +1,11 @@
+# Protect the project when cloned inside htdocs. Only public/ is web-accessible.
+Options -Indexes
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^$ public/ [R=302,L]
+    RewriteRule ^public(?:/|$) - [L]
+    RewriteRule ^ - [F,L]
+</IfModule>
+<IfModule !mod_rewrite.c>
+    Require all denied
+</IfModule>

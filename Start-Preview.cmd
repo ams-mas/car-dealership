@@ -1,3 +1,3 @@
 @echo off
-echo Start Apache and MySQL in XAMPP Control Panel.
-start "" http://localhost:8080
+for %%D in ("%~dp0.") do set "DEALERSHIP_FOLDER=%%~nxD"
+start "" "http://localhost/%DEALERSHIP_FOLDER%/public/"

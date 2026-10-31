@@ -1,50 +1,54 @@
-# XAMPP development
+# Car dealership — XAMPP local testing
 
-Website: http://localhost:8080
+Laravel lives at the repository root. You can clone directly into XAMPP htdocs; no extra dealership subfolder is required. The compiled frontend and installed dependencies are included.
 
-Start Apache and MySQL in XAMPP Control Panel before opening the website. Both are currently running. Start-Preview.cmd opens the website in your default browser.
+## First setup
 
-Project: dealership/
-Apache document root: dealership/public/
-Apache configuration: xampp/dealership.conf (included by E:/xampp/apache/conf/extra/httpd-vhosts.conf).
-The previous virtual-host configuration was backed up beside that file before adding the include. The dealership listener accepts local connections only. Existing port 80 configuration is preserved.
+1. Start Apache and MySQL in XAMPP Control Panel.
+2. Open a terminal in your XAMPP htdocs folder (for example E:\xampp\htdocs).
+3. Run:
 
-Laravel uses XAMPP PHP at E:/xampp/php/php.exe and the separate dealership_local database. Existing databases and the earlier SQLite file are preserved. The local .env is ignored by Git; .env.example contains local setup defaults without a key. XAMPP's default root account is for local development only.
+       git clone https://github.com/ams-mas/car-dealership.git
+       cd car-dealership
 
-After pulling new migrations, run from dealership:
-    E:/xampp/php/php.exe artisan migrate
+4. Double-click Setup-XAMPP.cmd. It creates .env only if missing, generates an application key only if missing, creates dealership_local if necessary, and runs pending migrations. It preserves existing data and credentials. If MySQL uses a password, edit DB_PASSWORD in .env and rerun setup.
+5. Open http://localhost/car-dealership/public/.
 
-Build frontend assets from dealership:
-    node ../package/bin/npm-cli.js run build
-Or, with a standard npm installation:
-    npm install
+XAMPP Apache must have mod_rewrite enabled and AllowOverride All for htdocs (normal XAMPP defaults). The root .htaccess blocks private project folders and redirects the project root to public/. No virtual-host edit is needed when using htdocs. If Apache uses another port, add that port to the URL and APP_URL in .env.
+
+## After pulling updates
+
+From the repository folder:
+
+    git pull origin main
+
+Then run Setup-XAMPP.cmd again and refresh your browser. If Git reports local changes, preserve or commit them before pulling; do not discard your work. .env, logs, and runtime databases are ignored.
+
+## Tests
+
+From the repository root:
+
+    E:\xampp\php\php.exe vendor/phpunit/phpunit/phpunit
+
+Adjust the PHP path for your XAMPP installation. Test the showroom at desktop/mobile widths, select a make, click Find a vehicle, reset the filter, and expand vehicle details. The data is fictional. Full inventory management, admin login, and inquiry submissions are not implemented yet.
+
+## Frontend changes
+
+Built CSS and JavaScript are committed, so Node is not needed to view the current website. To change frontend source, use a standard Node/npm installation:
+
+    npm ci
     npm run build
 
-Implemented: Laravel 12, Blade, HTML/CSS, built Tailwind and Alpine.js, responsive design preview, make filtering, and expandable fictional listings. Vehicle records are still embedded in the view. Database-backed inventory, owner authentication, inquiries, API, uploads, backups, and production deployment are not yet implemented.
+Bundled node_modules were installed on Windows. Run npm ci for a different platform. Composer dependencies are included; run composer install when composer.lock changes. Lockfiles describe the required dependency versions.
 
-XAMPP currently provides PHP 8.2.12. Upgrade to PHP 8.3+ before meeting the production specification. No website deployment was performed.
+## Database and local configuration
 
-Verified: Apache syntax check; MySQL migrations; starter tests (2 passed); HTTP 200 through Apache; Porsche filter response. Browser visual inspection remains pending.
+Use migrations for normal setup. database/xampp-schema.sql and xampp-migration-data.sql are optional snapshots for a new empty database; never import over data you need. Active sessions and credentials are excluded. No inventory or user records existed in the export. No application logs existed at snapshot time.
 
-## Set up from GitHub
+.env contains local credentials and must remain private. The default example uses XAMPP's local root account with an empty password. XAMPP currently has PHP 8.2; this preview supports it. The full production specification requires PHP 8.3+.
 
-1. Clone this repository and open a terminal in `dealership`.
-2. Run `composer install`.
-3. Copy `.env.example` to `.env`, then run `php artisan key:generate`.
-4. Start MySQL in XAMPP. Create a `dealership_local` database in phpMyAdmin, or run `php ../xampp/create-database.php` for an unchanged local XAMPP root account.
-5. Check the database credentials in `.env`, then run `php artisan migrate`.
-6. Install Node.js/npm, then run `npm ci` and `npm run build`.
-7. Edit the absolute project path in `xampp/dealership.conf` to match your checkout. Add an `Include` for that file to XAMPP's `apache/conf/extra/httpd-vhosts.conf`, then restart Apache. The provided configuration uses port 8080 and requires `mod_rewrite`.
-8. Open http://localhost:8080.
+## Existing checkout from the earlier folder layout
 
-Do not upload `.env` or database files. Production deployment requires its own environment configuration and credentials.
+After pulling, Laravel files move from dealership/ to the root. If you have an existing ignored dealership/.env, copy it to the root .env before setup to preserve its configuration. Existing vendor and node_modules remnants can remain until you confirm everything works. A custom Apache virtual host must point to the new root/public folder. The tracked xampp/dealership.conf is only for the original workstation; the htdocs setup above is portable.
 
-Compiled frontend assets in dealership/public/build are included in GitHub. Rebuild them after changing frontend source. Composer and npm dependencies are restored using the committed lockfiles; local environment files, databases, caches, and logs are not uploaded.
-
-## Included database and dependencies
-
-The repository includes vendor/ and node_modules/ as explicitly requested. The bundled Node dependencies were installed on Windows; run npm ci on other operating systems. Lockfiles remain the source for reproducible dependency installation.
-
-Database exports: dealership/database/xampp-schema.sql and xampp-migration-data.sql. Import the schema, then migration data into a new empty local database. These exports exclude active sessions, account credentials, cache contents, and queued payloads. No inventory or user records existed at export time. Do not import them over an existing database with data you need.
-
-No application log files existed at upload time; storage/logs/README.md records that state. The local .env and live SQLite/session data are not included.
+The original development workstation still uses http://localhost:8080 via its custom virtual host. Nothing is deployed by these instructions.
