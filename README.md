@@ -52,3 +52,11 @@ Use migrations for normal setup. database/xampp-schema.sql and xampp-migration-d
 After pulling, Laravel files move from dealership/ to the root. If you have an existing ignored dealership/.env, copy it to the root .env before setup to preserve its configuration. Existing vendor and node_modules remnants can remain until you confirm everything works. A custom Apache virtual host must point to the new root/public folder. The tracked xampp/dealership.conf is only for the original workstation; the htdocs setup above is portable.
 
 The original development workstation still uses http://localhost:8080 via its custom virtual host. Nothing is deployed by these instructions.
+
+## Navy and blue UI redesign
+
+The public design now follows DESIGN-CONCEPT.md: sticky responsive navigation, photographic hero, search panel, category links, featured/new/offer tabs, inventory sidebar, individual vehicle pages, saved vehicles, financing calculator, about page, and contact/trade-in draft forms. Images and Inter fonts are local assets (credits and font license are in public/images).
+
+Saved vehicle IDs use browser localStorage. Contact/trade-in drafts use browser sessionStorage and are not submitted. No actual financing terms, company history, verified vehicle specifications, contact details, maps, or testimonials have been invented. Demo listings are in app/Support/DemoInventory.php. The secure owner dashboard and database inventory remain future implementation work.
+
+Verified: nine automated tests (27 assertions), frontend build, desktop/mobile browser layout, search submission, saved-vehicle persistence, mobile navigation, and zero-interest payment calculation. The XAMPP htdocs checkout was updated for local review. Its local sessions/cache use files while the MySQL engine stall is unresolved.
