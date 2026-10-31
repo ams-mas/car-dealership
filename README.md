@@ -40,3 +40,11 @@ Verified: Apache syntax check; MySQL migrations; starter tests (2 passed); HTTP 
 Do not upload `.env` or database files. Production deployment requires its own environment configuration and credentials.
 
 Compiled frontend assets in dealership/public/build are included in GitHub. Rebuild them after changing frontend source. Composer and npm dependencies are restored using the committed lockfiles; local environment files, databases, caches, and logs are not uploaded.
+
+## Included database and dependencies
+
+The repository includes vendor/ and node_modules/ as explicitly requested. The bundled Node dependencies were installed on Windows; run npm ci on other operating systems. Lockfiles remain the source for reproducible dependency installation.
+
+Database exports: dealership/database/xampp-schema.sql and xampp-migration-data.sql. Import the schema, then migration data into a new empty local database. These exports exclude active sessions, account credentials, cache contents, and queued payloads. No inventory or user records existed at export time. Do not import them over an existing database with data you need.
+
+No application log files existed at upload time; storage/logs/README.md records that state. The local .env and live SQLite/session data are not included.
