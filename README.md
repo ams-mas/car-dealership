@@ -60,3 +60,13 @@ The public design now follows DESIGN-CONCEPT.md: sticky responsive navigation, p
 Saved vehicle IDs use browser localStorage. Contact/trade-in drafts use browser sessionStorage and are not submitted. No actual financing terms, company history, verified vehicle specifications, contact details, maps, or testimonials have been invented. Demo listings are in app/Support/DemoInventory.php. The secure owner dashboard and database inventory remain future implementation work.
 
 Verified: nine automated tests (27 assertions), frontend build, desktop/mobile browser layout, search submission, saved-vehicle persistence, mobile navigation, and zero-interest payment calculation. The XAMPP htdocs checkout was updated for local review. Its local sessions/cache use files while the MySQL engine stall is unresolved.
+
+## Final public design
+
+The final navy-and-blue public interface includes Car Finder, comparison for up to three vehicles, a native full-screen photo viewer, extended inventory filters, server-rendered pagination and page-size controls, pricing disclosures, dealership contact details, social links, FAQs, popular makes, and a click-to-load map. Business details are configurable in config/dealership.php and were checked against the live dealership contact page.
+
+Review at http://localhost/car-dealership/public/ after git pull origin main. No database schema change is needed for these design updates. If stale compiled views appear, run php artisan view:clear. The existing XAMPP environment file is preserved.
+
+Validation: 13 automated tests, 55 assertions; PHP/JavaScript syntax; production frontend build; desktop/mobile browser review; comparison selection and values; full-screen gallery; and Car Finder browser-draft save. Sample listings currently have one photo each; the gallery supports multiple image paths.
+
+This finalizes the public visual design and browser interactions. It does not complete the owner dashboard, live inventory import, verified specifications/history, inquiry delivery, or production deployment. Draft forms do not send messages. The existing MySQL engine stall remains separate from this design work; the local showroom uses file-backed sessions/cache.

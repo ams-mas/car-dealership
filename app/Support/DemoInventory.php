@@ -17,13 +17,13 @@ class DemoInventory
         ];
         return array_map(function ($r) {
             [$id,$year,$make,$model,$trim,$price,$miles,$body,$fuel,$image,$featured,$offer] = $r;
-            return compact('id','year','make','model','trim','price','miles','body','fuel','image','featured','offer') + ['status'=>'Available','condition'=>'Used','transmission'=>'Automatic','stock'=>'DEMO-'.str_pad((string)$id,4,'0',STR_PAD_LEFT)];
+            return compact('id','year','make','model','trim','price','miles','body','fuel','image','featured','offer') + ['status'=>'Available','condition'=>'Used','transmission'=>'Automatic','drivetrain'=>in_array($id,[1,3,5,6,8]) ? 'AWD' : 'RWD','exterior'=>['Black','Silver','White','Blue'][($id-1)%4],'interior'=>'Black','title'=>'Not verified','location'=>'Aurora, CO','vehicle_class'=>'Luxury','engine'=>$fuel === 'Electric' ? 'Electric motor (demo)' : 'Not supplied','doors'=>$body === 'Coupe' ? 2 : 4,'gallery'=>[$image],'stock'=>'DEMO-'.str_pad((string)$id,4,'0',STR_PAD_LEFT)];
         }, $rows);
     }
     public static function filter(array $filters): array
     {
         $cars = array_filter(self::all(), function ($car) use ($filters) {
-            foreach (['make','model','body','fuel','condition','status','transmission'] as $key) {
+            foreach (['make','model','body','fuel','condition','status','transmission','drivetrain','exterior','title','location','vehicle_class'] as $key) {
                 if (!empty($filters[$key]) && strcasecmp($car[$key], $filters[$key]) !== 0) return false;
             }
             if (($filters['category'] ?? '') === 'Electric' && $car['fuel'] !== 'Electric') return false;
@@ -39,3 +39,4 @@ class DemoInventory
         return array_values($cars);
     }
 }
+

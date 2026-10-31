@@ -2,9 +2,10 @@ import './bootstrap';
 import Alpine from 'alpinejs';
 
 Alpine.data('dealership', () => ({
-    menuOpen: false, filtersOpen: false, saved: [], toast: '', toastTimer: null,
+    menuOpen: false, filtersOpen: false, compared: [], saved: [], toast: '', toastTimer: null,
     init() {
         try { const stored = JSON.parse(localStorage.getItem('sadat-saved') || '[]'); this.saved = Array.isArray(stored) ? stored.filter(id => Number.isInteger(id) && id > 0 && id <= 8) : []; } catch { this.saved = []; }
+        try { const stored = JSON.parse(localStorage.getItem('sadat-compared') || '[]'); this.compared = Array.isArray(stored) ? [...new Set(stored.filter(id => Number.isInteger(id) && id > 0 && id <= 8))].slice(0, 3) : []; } catch { this.compared = []; }
     },
     notify(message) { this.toast = message; clearTimeout(this.toastTimer); this.toastTimer = setTimeout(() => this.toast = '', 3000); },
     toggleSaved(id) {
@@ -12,9 +13,24 @@ Alpine.data('dealership', () => ({
         this.saved = existed ? this.saved.filter(value => value !== id) : [...this.saved, id];
         try { localStorage.setItem('sadat-saved', JSON.stringify(this.saved)); this.notify(existed ? 'Vehicle removed from your shortlist.' : 'Vehicle saved to your shortlist.'); } catch { this.notify('Saved for this page. Browser storage is unavailable.'); }
     },
+    toggleCompare(id) {
+        if (this.compared.includes(id)) this.compared = this.compared.filter(value => value !== id);
+        else if (this.compared.length < 3) this.compared = [...this.compared, id];
+        else { this.notify('Choose up to three vehicles. Remove one to add another.'); return; }
+        try { localStorage.setItem('sadat-compared', JSON.stringify(this.compared)); } catch { this.notify('Comparison saved for this page only.'); }
+    },
+    clearCompare() {
+        this.compared = [];
+        try { localStorage.removeItem('sadat-compared'); } catch { /* Optional browser storage. */ }
+    },
     async shareVehicle() {
         try { await navigator.clipboard.writeText(window.location.href); this.notify('Vehicle link copied.'); } catch { this.notify('Copy the address from your browser to share this vehicle.'); }
     },
+}));
+Alpine.data('photoGallery', (images) => ({
+    images, index: 0,
+    next() { this.index = (this.index + 1) % this.images.length; },
+    previous() { this.index = (this.index - 1 + this.images.length) % this.images.length; },
 }));
 Alpine.data('paymentCalculator', (initialPrice = 50000) => ({
     price: initialPrice, down: 10000, apr: 7.5, months: 60,
@@ -38,3 +54,4 @@ Alpine.data('draftForm', (type) => ({
 }));
 window.Alpine = Alpine;
 Alpine.start();
+
